@@ -4,6 +4,7 @@ import com.example.movie.api.domain.entity.Movie;
 import com.example.movie.api.dto.MovieDetailsDTO;
 import com.example.movie.api.dto.MovieListDTO;
 import com.example.movie.api.dto.UpdateMovieRequest;
+import com.example.movie.api.exception.ResourceNotFoundException;
 import com.example.movie.api.repository.MovieRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 
 @Service
@@ -39,14 +38,14 @@ public class MovieService {
 
     @Transactional(readOnly = true)
     public MovieDetailsDTO findDetailsMovieById(Long id){
-        Optional<Movie> obj = movieRepository.findById(id);
-        Movie entity = obj.orElseThrow(() -> new RuntimeException("Movie not found: " + id));
+        Movie entity = movieRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Movie not found: " + id));
         return new MovieDetailsDTO(entity);
     }
+
     @Transactional
     public MovieDetailsDTO updateMovie(Long id, UpdateMovieRequest req) {
         Movie entity = movieRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Movie not found: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Movie not found: " + id));
 
         entity.setTitle(req.title());
         entity.setOverview(req.overview());
@@ -61,5 +60,12 @@ public class MovieService {
         return new MovieDetailsDTO(saved);
     }
 
+    @Transactional
+    public void deleteMovie(Long id) {
+        if (!movieRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Movie not found: " + id);
+        }
+        movieRepository.deleteById(id);
+    }
 
 }
