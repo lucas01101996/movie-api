@@ -20,6 +20,15 @@ public class MovieService {
     public Page<MovieListDTO> listMovies(Pageable pageable){
         Page<Movie> listMovie = movieRepository.findAll(pageable);
 
-        return listMovie.map(x -> new MovieListDTO(x));
+        return listMovie.map(MovieListDTO::new);
+    }
+
+    public Page<MovieListDTO> findByTitleOrOverview(String query, Pageable pageable){
+        if (query == null || query.isBlank()){
+            return listMovies(pageable);
+        }
+        Page<Movie> movies = movieRepository.findByTitleContainingIgnoreCaseOrOverviewContainingIgnoreCase(query, query,pageable);
+
+        return  movies.map(MovieListDTO::new);
     }
 }
