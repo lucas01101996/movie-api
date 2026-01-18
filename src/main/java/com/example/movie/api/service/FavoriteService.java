@@ -3,6 +3,7 @@ package com.example.movie.api.service;
 import com.example.movie.api.domain.entity.Movie;
 import com.example.movie.api.domain.entity.User;
 import com.example.movie.api.dto.MovieListDTO;
+import com.example.movie.api.exception.ResourceNotFoundException;
 import com.example.movie.api.repository.MovieRepository;
 import com.example.movie.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class FavoriteService {
     private User currentUserOrThrow() {
         String username = currentUsername();
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found: " + username));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
     }
 
     @Transactional(readOnly = true)
@@ -43,7 +44,7 @@ public class FavoriteService {
     public void addMyFavorite(Long movieId) {
         User user = currentUserOrThrow();
         Movie movie = movieRepository.findById(movieId)
-                .orElseThrow(() -> new RuntimeException("Movie not found: " + movieId));
+                .orElseThrow(() -> new ResourceNotFoundException("Movie not found: " + movieId));
 
         user.addFavorite(movie);
         userRepository.save(user);
@@ -53,7 +54,7 @@ public class FavoriteService {
     public void removeMyFavorite(Long movieId) {
         User user = currentUserOrThrow();
         Movie movie = movieRepository.findById(movieId)
-                .orElseThrow(() -> new RuntimeException("Movie not found: " + movieId));
+                .orElseThrow(() -> new ResourceNotFoundException("Movie not found: " + movieId));
 
         user.removeFavorite(movie);
         userRepository.save(user);
