@@ -1,15 +1,13 @@
 package com.example.movie.api.controller;
 
+import com.example.movie.api.dto.MovieDetailsDTO;
 import com.example.movie.api.dto.MovieListDTO;
 import com.example.movie.api.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -32,4 +30,11 @@ public class MovieController{
         Page<MovieListDTO> movieListDTOPage = service.findByTitleOrOverview(query, pageable);
         return ResponseEntity.ok().body(movieListDTOPage);
     }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<MovieDetailsDTO> findMovieDetailsById (@PathVariable Long id){
+        MovieDetailsDTO movieDetailsDTO = service.findDetailsMovieById(id);
+        return ResponseEntity.ok().body(movieDetailsDTO);
+    }
+
 }
