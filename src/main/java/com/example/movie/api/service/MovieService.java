@@ -1,6 +1,7 @@
 package com.example.movie.api.service;
 
 import com.example.movie.api.domain.entity.Movie;
+import com.example.movie.api.dto.CreateMovieRequest;
 import com.example.movie.api.dto.MovieDetailsDTO;
 import com.example.movie.api.dto.MovieListDTO;
 import com.example.movie.api.dto.UpdateMovieRequest;
@@ -41,6 +42,22 @@ public class MovieService {
         Movie entity = movieRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Movie not found: " + id));
         return new MovieDetailsDTO(entity);
     }
+
+    @Transactional
+    public MovieDetailsDTO createMovie(CreateMovieRequest req) {
+        Movie entity = new Movie(
+                req.title(),
+                req.overview(),
+                req.runtimeMinutes(),
+                req.genres(),
+                req.releaseDate(),
+                req.rating()
+        );
+
+        Movie saved = movieRepository.save(entity);
+        return new MovieDetailsDTO(saved);
+    }
+
 
     @Transactional
     public MovieDetailsDTO updateMovie(Long id, UpdateMovieRequest req) {

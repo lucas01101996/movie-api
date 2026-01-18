@@ -1,5 +1,6 @@
 package com.example.movie.api.controller;
 
+import com.example.movie.api.dto.CreateMovieRequest;
 import com.example.movie.api.dto.MovieDetailsDTO;
 import com.example.movie.api.dto.MovieListDTO;
 import com.example.movie.api.dto.UpdateMovieRequest;
@@ -38,6 +39,13 @@ public class MovieController{
         MovieDetailsDTO movieDetailsDTO = service.findDetailsMovieById(id);
         return ResponseEntity.ok().body(movieDetailsDTO);
     }
+
+    @PostMapping
+    public ResponseEntity<MovieDetailsDTO> create(@RequestBody @Valid CreateMovieRequest request) {
+        MovieDetailsDTO dto = service.createMovie(request);
+        return ResponseEntity.status(201).body(dto);
+    }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<MovieDetailsDTO> update(
