@@ -2,7 +2,9 @@ package com.example.movie.api.controller;
 
 import com.example.movie.api.dto.MovieDetailsDTO;
 import com.example.movie.api.dto.MovieListDTO;
+import com.example.movie.api.dto.UpdateMovieRequest;
 import com.example.movie.api.service.MovieService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,6 +37,15 @@ public class MovieController{
     public ResponseEntity<MovieDetailsDTO> findMovieDetailsById (@PathVariable Long id){
         MovieDetailsDTO movieDetailsDTO = service.findDetailsMovieById(id);
         return ResponseEntity.ok().body(movieDetailsDTO);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<MovieDetailsDTO> update(
+            @PathVariable Long id,
+            @RequestBody @Valid UpdateMovieRequest request
+    ) {
+        MovieDetailsDTO dto = service.updateMovie(id, request);
+        return ResponseEntity.ok(dto);
     }
 
 }
