@@ -23,3 +23,8 @@ INSERT INTO movie_genres (movie_id, genre) VALUES
 (5, 'Thriller'),
 (6, 'Drama'),
 (6, 'Music');
+
+
+INSERT INTO users (id, username) VALUES
+(1, 'user'),
+(2, 'admin');
